@@ -197,7 +197,7 @@ Only a model with `for_chat: true` can drive an agent session; a card with `for_
 
 Reads the calling session's current model state. No parameters.
 
-Returns `current_model`: `provider`, `model`, `effort`, `routing_version`, `capabilities` (context window, max output tokens, input modalities, presence of reasoning), `frozen_head_format_version`, `frozen_head_digest`, `fallback_lease`, `coordinator_generation`, `coordinator_next_seq`, `pending` (ordered pending changes).
+Returns `current_model`: `provider`, `model`, `effort`, `routing_version`, `capabilities` (context window, max output tokens, input modalities, presence of reasoning), `frozen_head_format_version`, `frozen_head_digest`, `coordinator_generation`, `coordinator_next_seq`, `pending` (ordered pending changes).
 
 Constraints: the operation is available when the session publishes its state; otherwise an error is returned.
 

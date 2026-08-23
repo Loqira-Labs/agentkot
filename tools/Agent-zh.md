@@ -197,7 +197,7 @@ depends_on = ["approve"]
 
 读取调用会话当前的模型状态。无参数。
 
-返回 `current_model`：`provider`、`model`、`effort`、`routing_version`、`capabilities`（上下文窗口、最大输出令牌、输入模态、是否存在推理）、`frozen_head_format_version`、`frozen_head_digest`、`fallback_lease`、`coordinator_generation`、`coordinator_next_seq`、`pending`（有序的待定变更）。
+返回 `current_model`：`provider`、`model`、`effort`、`routing_version`、`capabilities`（上下文窗口、最大输出令牌、输入模态、是否存在推理）、`frozen_head_format_version`、`frozen_head_digest`、`coordinator_generation`、`coordinator_next_seq`、`pending`（有序的待定变更）。
 
 约束：该操作在会话发布其状态时可用；否则返回错误。
 

@@ -14,7 +14,7 @@
 
 ## 立场
 
-**没有安全机制，也不会有。**智能体以启动它的用户权限运行命令、编辑文件。没有沙箱，没有允许/拒绝/询问规则，没有逐步确认。这是有意为之的决定：一个每隔一步就要征求许可的智能体做不完工作，它把你的钱花在关于意图的对话上。如果你需要隔离，拿现成的——容器、虚拟机、独立用户账户、成百上千种智能体沙箱中的任意一个——在其中运行 `kot`。隔离是环境的属性，不是智能体的属性。
+**没有安全机制，也不会有。**智能体以启动它的用户权限运行命令、编辑文件。没有沙箱，没有允许/拒绝/询问规则，没有逐步确认。这是有意为之的决定：一个每隔一步就要征求许可的智能体做不完工作，它把整个会话花在关于意图的对话上。如果你需要隔离，拿现成的——容器、虚拟机、独立用户账户、成百上千种智能体沙箱中的任意一个——在其中运行 `kot`。隔离是环境的属性，不是智能体的属性。
 
 **不需要技能（skills）。**技能就是一段带指令的文本，被人包进了一个带注册表、安装器和版本的单独机制。你有一个会读文件、遵循指令的智能体。想按技能工作——把文档交给智能体，让它照做。这里不会出现一个专门读文本的子系统。
 
@@ -24,17 +24,17 @@
 
 ## 核心优势：跨提供商的团队
 
-单个模型上的单个智能体，要么贵、要么慢、要么笨。这里角色分散在各个提供商之间，每个参与者都运行在适合其工作和价格的模型上。
+单个模型上的单个智能体，要么慢、要么浅、要么成为瓶颈。这里角色分散在各个提供商之间，每个参与者都运行在适合其工作的模型上。
 
-这种分工的一个例子——提供商和模型由你根据自己的任务、价格和已有订阅来选择：
+这种分工的一个例子——提供商和模型由你根据自己的任务和已有订阅来选择：
 
 | 角色 | 示例提供商 | 为什么 |
 |---|---|---|
 | 主导智能体 | anthropic | 掌控整个任务、写代码、做决策 |
 | 架构师、审查者 | openai | 对计划和差异的另一流派独立视角 |
-| 研究员、代码侦察 | deepseek | 以你不在意的价格进行数十个并行读取 |
-| 安全审查、第二双眼睛 | zai | 再一轮独立检查而不增加账单 |
-| `Search{smart}` 内的语义搜索 | 任意便宜提供商 | 搜索不应和主模型一样贵 |
+| 研究员、代码侦察 | deepseek | 在轻量模型上进行数十个并行读取 |
+| 安全审查、第二双眼睛 | zai | 在独立配额上再做一轮独立检查 |
+| `Search{smart}` 内的语义搜索 | 任意轻量提供商 | 搜索不应占用主模型 |
 
 如何启用：
 
@@ -42,11 +42,11 @@
 - `Agent{spawn|delegate|hire, provider, model, effort}` ——子智能体在所选的提供商上启动，父级的模型绝不会跨提供商泄露；
 - `Agent{set_model}` ——在两轮之间把活跃的队友切换到另一个提供商和模型；
 - 流水线步骤和团队步骤成员各自携带自己的 `provider` 和 `model`；
-- `kot web --search-provider … --search-model …` ——语义搜索迁移到一个独立的便宜提供商。
+- `kot web --search-provider … --search-model …` ——语义搜索迁移到一个独立的轻量提供商。
 
 每个提供商当前的模型标识符由智能体自己通过 `Agent{list_models}` 读取，在选择模型时会在 Web 界面中可见。
 
-结果：一个并行的团队，昂贵的模型只做真正需要昂贵模型的事，而日常工作和侦察则跑在便宜模型上。
+结果：一个并行的团队，最强的模型只做真正需要它的事，而日常工作和侦察则跑在轻量模型上。
 
 ## 交付内容
 
@@ -103,7 +103,7 @@ kot web --new             # prints the URL that opens a fresh session
 | 命令 | 用途 |
 |---|---|
 | `kot web` | Web 界面（默认命令） |
-| `kot login [--provider anthropic\|openai-codex]` | 通过 OAuth 进行订阅登录；默认提供商是 `anthropic` |
+| `kot login [--provider anthropic\|anthropic-oauth\|openai-codex]` | 通过 OAuth 进行订阅登录；Claude 订阅使用 `anthropic-oauth` 提供商 |
 | `kot logout [--provider <name>]` | 删除已存储的订阅令牌 |
 | `kot config show` | 显示生效配置（密钥已掩码） |
 | `kot config set provider <name> [--base-url …]` | 固定默认提供商 |
@@ -124,16 +124,18 @@ kot login --code <CODE>         # completes the login with the code from the suc
 
 ## 提供商与模型
 
-支持：`anthropic`、`openai`、`openai-codex`、`gemini`、`deepseek`、`grok`、`openrouter`、`zai`、`moonshotai`、`together`、`fireworks`、`lmstudio`、`lmstudio-native`、`ollama`、`openai-generic`。
+支持：`anthropic`、`anthropic-oauth`、`openai`、`openai-codex`、`gemini`、`deepseek`、`grok`、`openrouter`、`zai`、`moonshotai`、`together`、`fireworks`、`lmstudio`、`lmstudio-native`、`ollama`、`openai-generic`。
 
 凭据有两种接入方式：
 
-- OAuth 订阅——`kot login`，适用于 `anthropic`（Claude Pro/Max）和 `openai-codex`（ChatGPT Plus/Pro）；令牌存储在 `auth/` 中；
-- API key——`kot config set key <provider>`，key 写入 `providers.json`。
+- OAuth 订阅——Claude Pro/Max 使用 `kot login --provider anthropic-oauth`，ChatGPT Plus/Pro 使用 `kot login --provider openai-codex`；令牌存储在 `auth/` 中；
+- API key——`kot config set key <provider>`；`anthropic` 是仅 API key 的 Anthropic 路由，key 写入 `providers.json`。
 
 `lmstudio`、`lmstudio-native` 和 `ollama` 无需 key 即可在本地运行。`openai-generic` 需要显式的 base URL，并接受可选的 key。运行时的 key 解析顺序：环境变量 → `providers.json` → 外部 `api_key_helper`。
 
 模型目录内嵌在二进制里：每个模型都带有标识符、上下文窗口、输出上限、输入与输出模态、推理和工具支持，以及一个聊天资格标志。只有具备聊天资格的模型才能驱动会话；图像、视频和音频生成模型可供 Media 工具使用。完整目录（含媒体模型）由智能体通过 `Agent{list_models}` 读取；Web 界面在选择模型时列出聊天模型。
+
+**内置目录不认识的模型由你自己添加**——写在 `<config-home>/models.json` 里：`kot models add --provider <名称> --id <id> --for-chat true …`、`kot models list`、`kot models remove`。同一条记录也可以逐字段 **覆盖** 内置模型——修正后的上下文窗口、另一个显示名称、该模型实际接受的推理级别；`kot models add --clear <字段>` 只撤销其中一项覆盖，其余保持不变。在 Web 界面里，这些由模型表单完成：选择器中任意模型旁的铅笔图标编辑该行，最后一行「+ Add model…」新建一条，删除则移除你的记录（用户模型从列表中消失，被覆盖的内置模型回到它自带的描述）。留空的字段表示「按程序解析」，其后的灰色文本显示解析结果。命令行写入的记录会被运行中的 `kot web` 在下次刷新提供商列表时接管——无需重启。
 
 推理强度在会话创建时设置，并可在活跃会话上切换：`off`、`low`、`medium`、`high`、`xhigh`、`max`。
 
@@ -146,7 +148,7 @@ kot login --code <CODE>         # completes the login with the code from the suc
 - 后台任务面板：输出、监视器、停止。
 - 子智能体和队友面板：子智能体的工作历史、给它发邮件、停止、重启后恢复队友。
 - 智能体未同步文件的列表，一键写入磁盘。
-- 每个会话的 token 和费用统计。
+- 每个会话的 token 统计：输入、缓存写入、缓存读取、输出，以及其中的推理子计数。
 
 ## 智能体工具
 
@@ -208,7 +210,7 @@ project 和 local 作用域的记忆笔记存放在项目内部：`.kot/agent-me
 
 ## 设置
 
-配置目录中的 `settings.json` 用于设置默认提供商、模型、回退模型、登录方式、子进程的环境变量、上下文压缩参数，以及守护进程和客户端参数。
+配置目录中的 `settings.json` 用于设置默认提供商、模型、登录方式、子进程的环境变量、上下文压缩参数，以及守护进程和客户端参数。
 
 有用的环境变量：
 

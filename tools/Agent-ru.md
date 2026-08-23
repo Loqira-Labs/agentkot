@@ -23,7 +23,7 @@
 | cwd | string | нет | наследуется | абсолютный путь рабочего каталога ребёнка |
 | seed_history | string | нет | — | одноразовый `fork_id` из `History{fork}`; алиас `fork_from` |
 
-Возвращает результат `completed`: `agent_id`, `agent_type`, `content` (текстовые блоки отчёта), `total_tool_use_count`, `total_duration_ms`, `total_tokens`, `usage` (четыре счётчика токенов), `prompt`, `worktree_path`/`worktree_branch` (если worktree сохранён), `transcript_path` (путь к полной транскрипции ребёнка). Если ребёнок не вернул текст, подставляется маркер отсутствия вывода и путь к транскрипции.
+Возвращает результат `completed`: `agent_id`, `agent_type`, `content` (текстовые блоки отчёта), `total_tool_use_count`, `total_duration_ms`, `total_tokens`, `usage` (счётчики токенов, где размышления — подсчёт внутри выхода), `prompt`, `worktree_path`/`worktree_branch` (если worktree сохранён), `transcript_path` (путь к полной транскрипции ребёнка). Если ребёнок не вернул текст, подставляется маркер отсутствия вывода и путь к транскрипции.
 
 Ограничения: блокирует ход родителя до завершения ребёнка. Промежуточные вызовы инструментов ребёнка в транскрипцию родителя не попадают.
 
@@ -197,7 +197,7 @@ depends_on = ["approve"]
 
 Читает актуальное состояние модели вызывающей сессии. Параметров нет.
 
-Возвращает `current_model`: `provider`, `model`, `effort`, `routing_version`, `capabilities` (контекстное окно, максимум выходных токенов, входные модальности, наличие рассуждений), `frozen_head_format_version`, `frozen_head_digest`, `fallback_lease`, `coordinator_generation`, `coordinator_next_seq`, `pending` (упорядоченные ожидающие изменения).
+Возвращает `current_model`: `provider`, `model`, `effort`, `routing_version`, `capabilities` (контекстное окно, максимум выходных токенов, входные модальности, наличие рассуждений), `frozen_head_format_version`, `frozen_head_digest`, `coordinator_generation`, `coordinator_next_seq`, `pending` (упорядоченные ожидающие изменения).
 
 Ограничения: операция доступна, когда сессия публикует своё состояние; иначе возвращается ошибка.
 
