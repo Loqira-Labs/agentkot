@@ -48,6 +48,19 @@ Current model identifiers of every provider are read by the agent itself through
 
 The result: a parallel team where the strongest model does what actually requires it, while routine work and reconnaissance run on light ones.
 
+## Benchmarks
+
+[Harness-Bench](https://github.com/Qihoo360/harness-bench) measures the harness itself: 106 sandboxed offline agent tasks across 8 workflow categories, fixed model, deterministic oracle validators.
+
+Same model, DeepSeek V4 Flash — the harness decides:
+
+| Harness | Score |
+|---|---|
+| **KOT** | **79.1%** |
+| Hermes | 76.2% |
+
+KOT on a cheap fast model outperforms Hermes on the same model — by 2.9 points on the full 106-task suite.
+
 ## What ships
 
 Prebuilt binaries sit next to this file:
