@@ -28,13 +28,13 @@ One agent on one model is either slow, or shallow, or a bottleneck. Here roles a
 
 An example of such a split — the set of providers and models is yours to choose, by your tasks and available subscriptions:
 
-| Role | Example provider | Why |
-|---|---|---|
-| Lead agent | anthropic | holds the whole task, writes code, makes decisions |
-| Architect, reviewer | openai | an independent view from another school on plans and diffs |
-| Researchers, code reconnaissance | deepseek | dozens of parallel reads on a light model |
-| Security review, a second pair of eyes | zai | one more independent pass on a separate quota |
-| Semantic search inside `Search{smart}` | any light provider | search must not occupy the main model |
+| Role                                   | Example provider   | Why                                                        |
+| -------------------------------------- | ------------------ | ---------------------------------------------------------- |
+| Lead agent                             | anthropic          | holds the whole task, writes code, makes decisions         |
+| Architect, reviewer                    | openai             | an independent view from another school on plans and diffs |
+| Researchers, code reconnaissance       | deepseek           | dozens of parallel reads on a light model                  |
+| Security review, a second pair of eyes | zai                | one more independent pass on a separate quota              |
+| Semantic search inside `Search{smart}` | any light provider | search must not occupy the main model                      |
 
 How it is enabled:
 
@@ -50,26 +50,30 @@ The result: a parallel team where the strongest model does what actually require
 
 ## Benchmarks
 
+### Harness-Bench
+
 [Harness-Bench](https://github.com/Qihoo360/harness-bench) measures the harness itself: 106 sandboxed offline agent tasks across 8 workflow categories, fixed model, deterministic oracle validators.
 
 Same model, DeepSeek V4 Flash — the harness decides:
 
-| Harness | Score |
-|---|---|
+| Harness | Score     |
+| ------- | --------- |
 | **KOT** | **79.1%** |
-| Hermes | 76.2% |
+| Hermes  | 76.2%     |
 
 KOT on a cheap fast model outperforms Hermes on the same model — by 2.9 points on the full 106-task suite.
 
+### Terminal-Bench 3.0
+
 **Terminal-Bench 3.0** ([frontierbench.ai](https://www.frontierbench.ai/)) — real terminal work: build, debug, operate. A full single-pass run (k=1) over the whole task suite — 66 tasks of the pinned dataset plus 6 from the previous registry revision, 72 trials, every task graded by its own verifier. KOT drove [DeepSeek V4 Flash](https://api-docs.deepseek.com/) at reasoning effort `high`. Full run: [72 trials on Harbor Hub](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791).
 
-| Model (effort) | Agent | Resolution rate | Tokens | Cost |
-|---|---|---|---|---|
-| **[DeepSeek V4 Flash](https://api-docs.deepseek.com/) (high)** | **KOT** | **17.0%** | 3.3B | **$71.75** |
-| [Grok 4.5](https://docs.x.ai/developers/models/grok-4.5) (xhigh) | [Cursor CLI](https://cursor.com/docs/cli/overview) | 15.7% ± 1.5% | 1.2B | $766.02 |
-| [Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5) (max) | [Claude Code](https://claude.com/claude-code) | 14.6% ± 1.5% | 17.9B | $6.9k |
-| [GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna) (max) | [Codex](https://openai.com/codex/) | 14.3% ± 1.3% | 11.9B | $1.6k |
-| [GLM 5.2](https://z.ai/blog/glm-5.2) (max) | [Claude Code](https://claude.com/claude-code) | 4.6% ± 1.0% | 3.3B | $3.4k |
+| Model (effort)                                                                   | Agent                                              | Resolution rate | Tokens | Cost       |
+| -------------------------------------------------------------------------------- | -------------------------------------------------- | --------------- | ------ | ---------- |
+| **[DeepSeek V4 Flash](https://api-docs.deepseek.com/) (high)**                   | **KOT**                                            | **17.0%**       | 3.3B   | **$71.75** |
+| [Grok 4.5](https://docs.x.ai/developers/models/grok-4.5) (xhigh)                 | [Cursor CLI](https://cursor.com/docs/cli/overview) | 15.7% ± 1.5%    | 1.2B   | $766.02    |
+| [Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5) (max)                 | [Claude Code](https://claude.com/claude-code)      | 14.6% ± 1.5%    | 17.9B  | $6.9k      |
+| [GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna) (max) | [Codex](https://openai.com/codex/)                 | 14.3% ± 1.3%    | 11.9B  | $1.6k      |
+| [GLM 5.2](https://z.ai/blog/glm-5.2) (max)                                       | [Claude Code](https://claude.com/claude-code)      | 4.6% ± 1.0%     | 3.3B   | $3.4k      |
 
 The four lower rows are from the official Terminal-Bench 3.0 leaderboard (k=5); the KOT row is our own run over the same task suite. A cheap model inside a strong harness outresolves every entry below — and the entire 72-task run cost less than $72, an order of magnitude cheaper than any row in the whole leaderboard. 12 tasks fully solved, mean reward 17.0%.
 
@@ -77,11 +81,11 @@ The four lower rows are from the official Terminal-Bench 3.0 leaderboard (k=5); 
 
 Prebuilt binaries sit next to this file:
 
-| Platform | File |
-|---|---|
-| Linux (x86-64) | `releases/linux/kot` |
-| macOS (Apple Silicon) | `releases/macos/kot.bin` |
-| Windows (x86-64) | `releases/windows/kot.exe` |
+| Platform              | File                       |
+| --------------------- | -------------------------- |
+| Linux (x86-64)        | `releases/linux/kot`       |
+| macOS (Apple Silicon) | `releases/macos/kot.bin`   |
+| Windows (x86-64)      | `releases/windows/kot.exe` |
 
 The web interface (page, script, styles), icons, tokenizer and output-compression rules are embedded in the binary — nothing has to be placed next to it. Put the file into any directory on `PATH`.
 
@@ -102,14 +106,14 @@ Two external programs, both must be available on `PATH`:
 
 Without them the agent does not run properly: `kot doctor` reports them as missing required dependencies.
 
-| System | Install |
-|---|---|
-| Windows | `winget install BurntSushi.ripgrep.MSVC` and `winget install Git.Git` |
-| macOS | `brew install ripgrep git` |
-| Debian, Ubuntu | `sudo apt install ripgrep git` |
-| Fedora, RHEL | `sudo dnf install ripgrep git` |
-| Arch | `sudo pacman -S ripgrep git` |
-| Alpine | `apk add ripgrep git` |
+| System         | Install                                                               |
+| -------------- | --------------------------------------------------------------------- |
+| Windows        | `winget install BurntSushi.ripgrep.MSVC` and `winget install Git.Git` |
+| macOS          | `brew install ripgrep git`                                            |
+| Debian, Ubuntu | `sudo apt install ripgrep git`                                        |
+| Fedora, RHEL   | `sudo dnf install ripgrep git`                                        |
+| Arch           | `sudo pacman -S ripgrep git`                                          |
+| Alpine         | `apk add ripgrep git`                                                 |
 
 Check after installing: `kot doctor` — it prints the detected versions of both programs and the state of the configuration.
 
@@ -125,16 +129,16 @@ kot web --new             # prints the URL that opens a fresh session
 
 Commands:
 
-| Command | Purpose |
-|---|---|
-| `kot web` | web interface (the default command) |
-| `kot login [--provider anthropic\|anthropic-oauth\|openai-codex]` | subscription login over OAuth; Claude subscriptions use provider `anthropic-oauth` |
-| `kot logout [--provider <name>]` | remove a stored subscription token |
-| `kot config show` | show the effective configuration (secrets masked) |
-| `kot config set provider <name> [--base-url …]` | pin the default provider |
-| `kot config set model <id>` | pin the default model |
-| `kot config set key <provider>` | store an API key (hidden input) |
-| `kot doctor [--live]` | check the environment, configuration and credentials; `--live` performs a minimal real request to the provider |
+| Command                                                           | Purpose                                                                                                        |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `kot web`                                                         | web interface (the default command)                                                                            |
+| `kot login [--provider anthropic\|anthropic-oauth\|openai-codex]` | subscription login over OAuth; Claude subscriptions use provider `anthropic-oauth`                             |
+| `kot logout [--provider <name>]`                                  | remove a stored subscription token                                                                             |
+| `kot config show`                                                 | show the effective configuration (secrets masked)                                                              |
+| `kot config set provider <name> [--base-url …]`                   | pin the default provider                                                                                       |
+| `kot config set model <id>`                                       | pin the default model                                                                                          |
+| `kot config set key <provider>`                                   | store an API key (hidden input)                                                                                |
+| `kot doctor [--live]`                                             | check the environment, configuration and credentials; `--live` performs a minimal real request to the provider |
 
 The normal login prints the authorization URL and accepts the code from the success page in the same run. On a machine without a browser the login takes two calls:
 
@@ -177,18 +181,18 @@ The reasoning effort is set when a session is created and switched on a live ses
 
 ## Agent tools
 
-| Tool | What it does |
-|---|---|
-| [Agent](tools/Agent.md) | spawning sub-agents, hiring teammates, mail between agents, durable pipelines, choosing the child's provider and model |
-| [Shell](tools/Shell.md) | commands in the host shell, background tasks with monitors, persistent interactive shell sessions |
-| [Search](tools/Search.md) | file search by pattern, content search by regular expression, semantic search |
-| [Files](tools/Files.md) | reading and editing files through a private virtual layer, structural code reads, directories, notebooks and images |
-| [Plan](tools/Plan.md) | the session checklist, a durable task graph with owners and dependencies, planning mode |
-| [Memory](tools/Memory.md) | durable notes with scopes, search and automatic prefetch at session start |
-| [History](tools/History.md) | reading the recorded history, recovering past results, a history slice for launching a child, context compaction |
-| [Media](tools/Media.md) | image, video, music and speech generation through the configured models |
-| [Tools](tools/Tools.md) | managing the agent's own tool set: add, remove, search, invoke |
-| [cli-wrapper](tools/cli-wrapper.md) | turning any CLI script into a typed agent tool, including one backed by a resident process |
+| Tool                                | What it does                                                                                                           |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| [Agent](tools/Agent.md)             | spawning sub-agents, hiring teammates, mail between agents, durable pipelines, choosing the child's provider and model |
+| [Shell](tools/Shell.md)             | commands in the host shell, background tasks with monitors, persistent interactive shell sessions                      |
+| [Search](tools/Search.md)           | file search by pattern, content search by regular expression, semantic search                                          |
+| [Files](tools/Files.md)             | reading and editing files through a private virtual layer, structural code reads, directories, notebooks and images    |
+| [Plan](tools/Plan.md)               | the session checklist, a durable task graph with owners and dependencies, planning mode                                |
+| [Memory](tools/Memory.md)           | durable notes with scopes, search and automatic prefetch at session start                                              |
+| [History](tools/History.md)         | reading the recorded history, recovering past results, a history slice for launching a child, context compaction       |
+| [Media](tools/Media.md)             | image, video, music and speech generation through the configured models                                                |
+| [Tools](tools/Tools.md)             | managing the agent's own tool set: add, remove, search, invoke                                                         |
+| [cli-wrapper](tools/cli-wrapper.md) | turning any CLI script into a typed agent tool, including one backed by a resident process                             |
 
 Every row leads to the full description: operations, parameters, behaviour, limits and call examples.
 
@@ -239,13 +243,13 @@ Project and local memory notes live inside the project itself: `.kot/agent-memor
 
 Useful environment variables:
 
-| Variable | Effect |
-|---|---|
-| `KOT_CONFIG_DIR`, `KOT_RUNTIME_DIR`, `KOT_DATA_DIR` | locations of the configuration, runtime and data roots |
-| `KOT_WEB_ADDR`, `KOT_WEB_WORKSPACE`, `KOT_WEB_PROVIDER`, `KOT_WEB_MODEL`, `KOT_WEB_NEW` | values of the `kot web` options |
-| `KOT_GLOB_MAX_RESULTS`, `KOT_GLOB_TIMEOUT_SECONDS`, `KOT_GLOB_NO_IGNORE`, `KOT_GLOB_HIDDEN` | limits and mode of the file search |
-| `KOT_TASK_LIST_ID` | the task board the session works with |
-| `ENABLE_TOOL_SEARCH` | deferred-tools mode |
+| Variable                                                                                    | Effect                                                 |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `KOT_CONFIG_DIR`, `KOT_RUNTIME_DIR`, `KOT_DATA_DIR`                                         | locations of the configuration, runtime and data roots |
+| `KOT_WEB_ADDR`, `KOT_WEB_WORKSPACE`, `KOT_WEB_PROVIDER`, `KOT_WEB_MODEL`, `KOT_WEB_NEW`     | values of the `kot web` options                        |
+| `KOT_GLOB_MAX_RESULTS`, `KOT_GLOB_TIMEOUT_SECONDS`, `KOT_GLOB_NO_IGNORE`, `KOT_GLOB_HIDDEN` | limits and mode of the file search                     |
+| `KOT_TASK_LIST_ID`                                                                          | the task board the session works with                  |
+| `ENABLE_TOOL_SEARCH`                                                                        | deferred-tools mode                                    |
 
 ## Documentation set
 

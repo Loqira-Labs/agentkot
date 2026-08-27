@@ -28,13 +28,13 @@
 
 这种分工的一个例子——提供商和模型由你根据自己的任务和已有订阅来选择：
 
-| 角色 | 示例提供商 | 为什么 |
-|---|---|---|
-| 主导智能体 | anthropic | 掌控整个任务、写代码、做决策 |
-| 架构师、审查者 | openai | 对计划和差异的另一流派独立视角 |
-| 研究员、代码侦察 | deepseek | 在轻量模型上进行数十个并行读取 |
-| 安全审查、第二双眼睛 | zai | 在独立配额上再做一轮独立检查 |
-| `Search{smart}` 内的语义搜索 | 任意轻量提供商 | 搜索不应占用主模型 |
+| 角色                         | 示例提供商     | 为什么                         |
+| ---------------------------- | -------------- | ------------------------------ |
+| 主导智能体                   | anthropic      | 掌控整个任务、写代码、做决策   |
+| 架构师、审查者               | openai         | 对计划和差异的另一流派独立视角 |
+| 研究员、代码侦察             | deepseek       | 在轻量模型上进行数十个并行读取 |
+| 安全审查、第二双眼睛         | zai            | 在独立配额上再做一轮独立检查   |
+| `Search{smart}` 内的语义搜索 | 任意轻量提供商 | 搜索不应占用主模型             |
 
 如何启用：
 
@@ -50,26 +50,30 @@
 
 ## 基准测试
 
+### Harness-Bench
+
 [Harness-Bench](https://github.com/Qihoo360/harness-bench) 衡量的正是 harness 本身：106 个沙箱离线智能体任务，覆盖 8 个工作流类别，模型固定，确定性的 oracle 校验器。
 
 同一模型 —— DeepSeek V4 Flash；决定因素在于 harness：
 
-| Harness | 得分 |
-|---|---|
+| Harness | 得分      |
+| ------- | --------- |
 | **KOT** | **79.1%** |
-| Hermes | 76.2% |
+| Hermes  | 76.2%     |
 
 在同一模型上，KOT 以廉价快速模型超越 Hermes —— 在全部 106 个任务上领先 2.9 个百分点。
 
+### Terminal-Bench 3.0
+
 **Terminal-Bench 3.0**（[frontierbench.ai](https://www.frontierbench.ai/)）——真正的终端工作：构建、调试、运维。对整个任务套件的完整单次运行（k=1）——固定数据集的 66 个任务加上先前注册表修订中的 6 个，共 72 个 trials，每个任务由其专属验证器评分。KOT 驱动 [DeepSeek V4 Flash](https://api-docs.deepseek.com/)，推理强度为 `high`。完整运行记录：[Harbor Hub 上的 72 个 trials](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791)。
 
-| 模型（effort） | 智能体 | 解决率 | Token | 成本 |
-|---|---|---|---|---|
-| **[DeepSeek V4 Flash](https://api-docs.deepseek.com/)（high）** | **KOT** | **17.0%** | 3.3B | **$71.75** |
-| [Grok 4.5](https://docs.x.ai/developers/models/grok-4.5)（xhigh） | [Cursor CLI](https://cursor.com/docs/cli/overview) | 15.7% ± 1.5% | 1.2B | $766.02 |
-| [Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5)（max） | [Claude Code](https://claude.com/claude-code) | 14.6% ± 1.5% | 17.9B | $6.9k |
-| [GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna)（max） | [Codex](https://openai.com/codex/) | 14.3% ± 1.3% | 11.9B | $1.6k |
-| [GLM 5.2](https://z.ai/blog/glm-5.2)（max） | [Claude Code](https://claude.com/claude-code) | 4.6% ± 1.0% | 3.3B | $3.4k |
+| 模型（effort）                                                                    | 智能体                                             | 解决率       | Token | 成本       |
+| --------------------------------------------------------------------------------- | -------------------------------------------------- | ------------ | ----- | ---------- |
+| **[DeepSeek V4 Flash](https://api-docs.deepseek.com/)（high）**                   | **KOT**                                            | **17.0%**    | 3.3B  | **$71.75** |
+| [Grok 4.5](https://docs.x.ai/developers/models/grok-4.5)（xhigh）                 | [Cursor CLI](https://cursor.com/docs/cli/overview) | 15.7% ± 1.5% | 1.2B  | $766.02    |
+| [Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5)（max）                 | [Claude Code](https://claude.com/claude-code)      | 14.6% ± 1.5% | 17.9B | $6.9k      |
+| [GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna)（max） | [Codex](https://openai.com/codex/)                 | 14.3% ± 1.3% | 11.9B | $1.6k      |
+| [GLM 5.2](https://z.ai/blog/glm-5.2)（max）                                       | [Claude Code](https://claude.com/claude-code)      | 4.6% ± 1.0%  | 3.3B  | $3.4k      |
 
 下面四行来自 Terminal-Bench 3.0 官方排行榜（k=5）；KOT 一行是我们对同一任务套件的自主运行。廉价模型配上强大的 harness，解决率超过下面每一个参赛者——而整个 72 任务的运行成本不到 $72，比整个排行榜中任何一行都低一个数量级。完整解决 12 个任务，平均 reward 17.0%。
 
@@ -77,11 +81,11 @@
 
 预编译的二进制文件就在本文件旁边：
 
-| 平台 | 文件 |
-|---|---|
-| Linux (x86-64) | `releases/linux/kot` |
-| macOS (Apple Silicon) | `releases/macos/kot.bin` |
-| Windows (x86-64) | `releases/windows/kot.exe` |
+| 平台                  | 文件                       |
+| --------------------- | -------------------------- |
+| Linux (x86-64)        | `releases/linux/kot`       |
+| macOS (Apple Silicon) | `releases/macos/kot.bin`   |
+| Windows (x86-64)      | `releases/windows/kot.exe` |
 
 Web 界面（页面、脚本、样式）、图标、分词器和输出压缩规则都内嵌在二进制里——旁边无需放任何东西。把文件放进 `PATH` 上的任意目录即可。
 
@@ -102,14 +106,14 @@ chmod +x kot                          # Linux
 
 没有它们，智能体无法正常运行：`kot doctor` 会把它们报告为缺失的必要依赖。
 
-| 系统 | 安装 |
-|---|---|
-| Windows | `winget install BurntSushi.ripgrep.MSVC` 和 `winget install Git.Git` |
-| macOS | `brew install ripgrep git` |
-| Debian, Ubuntu | `sudo apt install ripgrep git` |
-| Fedora, RHEL | `sudo dnf install ripgrep git` |
-| Arch | `sudo pacman -S ripgrep git` |
-| Alpine | `apk add ripgrep git` |
+| 系统           | 安装                                                                 |
+| -------------- | -------------------------------------------------------------------- |
+| Windows        | `winget install BurntSushi.ripgrep.MSVC` 和 `winget install Git.Git` |
+| macOS          | `brew install ripgrep git`                                           |
+| Debian, Ubuntu | `sudo apt install ripgrep git`                                       |
+| Fedora, RHEL   | `sudo dnf install ripgrep git`                                       |
+| Arch           | `sudo pacman -S ripgrep git`                                         |
+| Alpine         | `apk add ripgrep git`                                                |
 
 安装后检查：`kot doctor` ——它会打印两个程序被检测到的版本以及配置状态。
 
@@ -125,16 +129,16 @@ kot web --new             # prints the URL that opens a fresh session
 
 命令：
 
-| 命令 | 用途 |
-|---|---|
-| `kot web` | Web 界面（默认命令） |
+| 命令                                                              | 用途                                                              |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `kot web`                                                         | Web 界面（默认命令）                                              |
 | `kot login [--provider anthropic\|anthropic-oauth\|openai-codex]` | 通过 OAuth 进行订阅登录；Claude 订阅使用 `anthropic-oauth` 提供商 |
-| `kot logout [--provider <name>]` | 删除已存储的订阅令牌 |
-| `kot config show` | 显示生效配置（密钥已掩码） |
-| `kot config set provider <name> [--base-url …]` | 固定默认提供商 |
-| `kot config set model <id>` | 固定默认模型 |
-| `kot config set key <provider>` | 存储一个 API key（隐藏输入） |
-| `kot doctor [--live]` | 检查环境、配置和凭据；`--live` 会对提供商执行一次最小化的真实请求 |
+| `kot logout [--provider <name>]`                                  | 删除已存储的订阅令牌                                              |
+| `kot config show`                                                 | 显示生效配置（密钥已掩码）                                        |
+| `kot config set provider <name> [--base-url …]`                   | 固定默认提供商                                                    |
+| `kot config set model <id>`                                       | 固定默认模型                                                      |
+| `kot config set key <provider>`                                   | 存储一个 API key（隐藏输入）                                      |
+| `kot doctor [--live]`                                             | 检查环境、配置和凭据；`--live` 会对提供商执行一次最小化的真实请求 |
 
 普通登录会在同一次运行中打印授权 URL，并从成功页接收授权码。在没有浏览器的机器上，登录需要两次调用：
 
@@ -177,18 +181,18 @@ kot login --code <CODE>         # completes the login with the code from the suc
 
 ## 智能体工具
 
-| 工具 | 作用 |
-|---|---|
-| [Agent](tools/Agent-zh.md) | 生成子智能体、雇佣队友、智能体之间通信、持久流水线、选择子智能体的提供商和模型 |
-| [Shell](tools/Shell-zh.md) | 在主机 shell 中执行命令、带监视器的后台任务、持久交互式 shell 会话 |
-| [Search](tools/Search-zh.md) | 按模式搜索文件、按正则表达式搜索内容、语义搜索 |
-| [Files](tools/Files-zh.md) | 通过私有虚拟层读写文件、结构化代码读取、目录、notebook 和图像 |
-| [Plan](tools/Plan-zh.md) | 会话清单、带负责人和依赖的持久任务图、规划模式 |
-| [Memory](tools/Memory-zh.md) | 带作用域的持久笔记、搜索以及会话开始时的自动预取 |
-| [History](tools/History-zh.md) | 读取已记录的历史、恢复过往结果、用于启动子智能体的历史切片、上下文压缩 |
-| [Media](tools/Media-zh.md) | 通过已配置模型生成图像、视频、音乐和语音 |
-| [Tools](tools/Tools-zh.md) | 管理智能体自己的工具集：添加、移除、搜索、调用 |
-| [cli-wrapper](tools/cli-wrapper-zh.md) | 把任意 CLI 脚本变成强类型智能体工具，包括由常驻进程支撑的 |
+| 工具                                   | 作用                                                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------ |
+| [Agent](tools/Agent-zh.md)             | 生成子智能体、雇佣队友、智能体之间通信、持久流水线、选择子智能体的提供商和模型 |
+| [Shell](tools/Shell-zh.md)             | 在主机 shell 中执行命令、带监视器的后台任务、持久交互式 shell 会话             |
+| [Search](tools/Search-zh.md)           | 按模式搜索文件、按正则表达式搜索内容、语义搜索                                 |
+| [Files](tools/Files-zh.md)             | 通过私有虚拟层读写文件、结构化代码读取、目录、notebook 和图像                  |
+| [Plan](tools/Plan-zh.md)               | 会话清单、带负责人和依赖的持久任务图、规划模式                                 |
+| [Memory](tools/Memory-zh.md)           | 带作用域的持久笔记、搜索以及会话开始时的自动预取                               |
+| [History](tools/History-zh.md)         | 读取已记录的历史、恢复过往结果、用于启动子智能体的历史切片、上下文压缩         |
+| [Media](tools/Media-zh.md)             | 通过已配置模型生成图像、视频、音乐和语音                                       |
+| [Tools](tools/Tools-zh.md)             | 管理智能体自己的工具集：添加、移除、搜索、调用                                 |
+| [cli-wrapper](tools/cli-wrapper-zh.md) | 把任意 CLI 脚本变成强类型智能体工具，包括由常驻进程支撑的                      |
 
 每一行都指向完整描述：操作、参数、行为、限制和调用示例。
 
@@ -239,13 +243,13 @@ project 和 local 作用域的记忆笔记存放在项目内部：`.kot/agent-me
 
 有用的环境变量：
 
-| 变量 | 作用 |
-|---|---|
-| `KOT_CONFIG_DIR`, `KOT_RUNTIME_DIR`, `KOT_DATA_DIR` | 配置、运行时和数据根目录的位置 |
-| `KOT_WEB_ADDR`, `KOT_WEB_WORKSPACE`, `KOT_WEB_PROVIDER`, `KOT_WEB_MODEL`, `KOT_WEB_NEW` | `kot web` 各选项的值 |
-| `KOT_GLOB_MAX_RESULTS`, `KOT_GLOB_TIMEOUT_SECONDS`, `KOT_GLOB_NO_IGNORE`, `KOT_GLOB_HIDDEN` | 文件搜索的限制和模式 |
-| `KOT_TASK_LIST_ID` | 会话所使用的任务看板 |
-| `ENABLE_TOOL_SEARCH` | 延迟工具模式 |
+| 变量                                                                                        | 作用                           |
+| ------------------------------------------------------------------------------------------- | ------------------------------ |
+| `KOT_CONFIG_DIR`, `KOT_RUNTIME_DIR`, `KOT_DATA_DIR`                                         | 配置、运行时和数据根目录的位置 |
+| `KOT_WEB_ADDR`, `KOT_WEB_WORKSPACE`, `KOT_WEB_PROVIDER`, `KOT_WEB_MODEL`, `KOT_WEB_NEW`     | `kot web` 各选项的值           |
+| `KOT_GLOB_MAX_RESULTS`, `KOT_GLOB_TIMEOUT_SECONDS`, `KOT_GLOB_NO_IGNORE`, `KOT_GLOB_HIDDEN` | 文件搜索的限制和模式           |
+| `KOT_TASK_LIST_ID`                                                                          | 会话所使用的任务看板           |
+| `ENABLE_TOOL_SEARCH`                                                                        | 延迟工具模式                   |
 
 ## 文档集
 
