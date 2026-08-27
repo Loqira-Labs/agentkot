@@ -61,6 +61,18 @@
 
 KOT на дешёвой быстрой модели обходит Hermes на той же модели — на 2.9 пункта по полному набору из 106 задач.
 
+**Terminal-Bench 3.0** ([frontierbench.ai](https://www.frontierbench.ai/)) — настоящая терминальная работа: сборка, отладка, эксплуатация. Полный однопроходный прогон (k=1) по всему набору — 66 задач закреплённого датасета плюс 6 из предыдущей ревизии реестра, 72 trials, каждую задачу судит собственный верификатор. KOT работал на [DeepSeek V4 Flash](https://api-docs.deepseek.com/) с reasoning effort `high`. Полный ран: [72 trials на Harbor Hub](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791).
+
+| Модель (effort) | Агент | Resolution rate | Токены | Стоимость |
+|---|---|---|---|---|
+| **[DeepSeek V4 Flash](https://api-docs.deepseek.com/) (high)** | **KOT** | **17.0%** | 3.3B | **$71.75** |
+| [Grok 4.5](https://docs.x.ai/developers/models/grok-4.5) (xhigh) | [Cursor CLI](https://cursor.com/docs/cli/overview) | 15.7% ± 1.5% | 1.2B | $766.02 |
+| [Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5) (max) | [Claude Code](https://claude.com/claude-code) | 14.6% ± 1.5% | 17.9B | $6.9k |
+| [GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna) (max) | [Codex](https://openai.com/codex/) | 14.3% ± 1.3% | 11.9B | $1.6k |
+| [GLM 5.2](https://z.ai/blog/glm-5.2) (max) | [Claude Code](https://claude.com/claude-code) | 4.6% ± 1.0% | 3.3B | $3.4k |
+
+Нижние четыре строки — из официального лидерборда Terminal-Bench 3.0 (k=5); строка KOT — наш собственный прогон по тому же набору задач. Дешёвая модель в сильном harness решает больше, чем каждый участник ниже, — а весь прогон на 72 задачи стоил меньше $72, на порядок дешевле любой строки во всём лидерборде. 12 задач решено полностью, средний reward 17.0%.
+
 ## Состав поставки
 
 Готовые бинарники лежат рядом с этим файлом:

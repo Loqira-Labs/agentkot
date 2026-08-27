@@ -61,6 +61,18 @@ Same model, DeepSeek V4 Flash — the harness decides:
 
 KOT on a cheap fast model outperforms Hermes on the same model — by 2.9 points on the full 106-task suite.
 
+**Terminal-Bench 3.0** ([frontierbench.ai](https://www.frontierbench.ai/)) — real terminal work: build, debug, operate. A full single-pass run (k=1) over the whole task suite — 66 tasks of the pinned dataset plus 6 from the previous registry revision, 72 trials, every task graded by its own verifier. KOT drove [DeepSeek V4 Flash](https://api-docs.deepseek.com/) at reasoning effort `high`. Full run: [72 trials on Harbor Hub](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791).
+
+| Model (effort) | Agent | Resolution rate | Tokens | Cost |
+|---|---|---|---|---|
+| **[DeepSeek V4 Flash](https://api-docs.deepseek.com/) (high)** | **KOT** | **17.0%** | 3.3B | **$71.75** |
+| [Grok 4.5](https://docs.x.ai/developers/models/grok-4.5) (xhigh) | [Cursor CLI](https://cursor.com/docs/cli/overview) | 15.7% ± 1.5% | 1.2B | $766.02 |
+| [Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5) (max) | [Claude Code](https://claude.com/claude-code) | 14.6% ± 1.5% | 17.9B | $6.9k |
+| [GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna) (max) | [Codex](https://openai.com/codex/) | 14.3% ± 1.3% | 11.9B | $1.6k |
+| [GLM 5.2](https://z.ai/blog/glm-5.2) (max) | [Claude Code](https://claude.com/claude-code) | 4.6% ± 1.0% | 3.3B | $3.4k |
+
+The four lower rows are from the official Terminal-Bench 3.0 leaderboard (k=5); the KOT row is our own run over the same task suite. A cheap model inside a strong harness outresolves every entry below — and the entire 72-task run cost less than $72, an order of magnitude cheaper than any row in the whole leaderboard. 12 tasks fully solved, mean reward 17.0%.
+
 ## What ships
 
 Prebuilt binaries sit next to this file:

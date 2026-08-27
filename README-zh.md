@@ -61,6 +61,18 @@
 
 在同一模型上，KOT 以廉价快速模型超越 Hermes —— 在全部 106 个任务上领先 2.9 个百分点。
 
+**Terminal-Bench 3.0**（[frontierbench.ai](https://www.frontierbench.ai/)）——真正的终端工作：构建、调试、运维。对整个任务套件的完整单次运行（k=1）——固定数据集的 66 个任务加上先前注册表修订中的 6 个，共 72 个 trials，每个任务由其专属验证器评分。KOT 驱动 [DeepSeek V4 Flash](https://api-docs.deepseek.com/)，推理强度为 `high`。完整运行记录：[Harbor Hub 上的 72 个 trials](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791)。
+
+| 模型（effort） | 智能体 | 解决率 | Token | 成本 |
+|---|---|---|---|---|
+| **[DeepSeek V4 Flash](https://api-docs.deepseek.com/)（high）** | **KOT** | **17.0%** | 3.3B | **$71.75** |
+| [Grok 4.5](https://docs.x.ai/developers/models/grok-4.5)（xhigh） | [Cursor CLI](https://cursor.com/docs/cli/overview) | 15.7% ± 1.5% | 1.2B | $766.02 |
+| [Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5)（max） | [Claude Code](https://claude.com/claude-code) | 14.6% ± 1.5% | 17.9B | $6.9k |
+| [GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna)（max） | [Codex](https://openai.com/codex/) | 14.3% ± 1.3% | 11.9B | $1.6k |
+| [GLM 5.2](https://z.ai/blog/glm-5.2)（max） | [Claude Code](https://claude.com/claude-code) | 4.6% ± 1.0% | 3.3B | $3.4k |
+
+下面四行来自 Terminal-Bench 3.0 官方排行榜（k=5）；KOT 一行是我们对同一任务套件的自主运行。廉价模型配上强大的 harness，解决率超过下面每一个参赛者——而整个 72 任务的运行成本不到 $72，比整个排行榜中任何一行都低一个数量级。完整解决 12 个任务，平均 reward 17.0%。
+
 ## 交付内容
 
 预编译的二进制文件就在本文件旁边：
