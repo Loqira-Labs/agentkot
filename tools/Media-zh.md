@@ -73,6 +73,67 @@
 
 对于音乐模型（`AudioGeneration`），参数 `voice`、`speed` 和 `format` 被禁止——传入它们会返回错误。对于语音合成模型（`TextToSpeech`），`voice` 参数必填，`duration_seconds` 被禁止。
 
+## 识别工具
+
+除了生成之外，还有两个一次性识别工具：`RecognizeImage` 和 `RecognizeAudio`。每个工具都以最小的识别提示词进行一次 LLM 调用，不使用工具、占用最少的上下文：传入一张或多张图片（或音频片段）以及任务，即可获得直接的答案。当代理需要描述图片、读取其中的文字、比较图片或转录/分析音频时使用它们——无需消耗主上下文。转换媒体的操作（编辑、转换、使用其他工具的多步骤分析）需要完整的子代理。
+
+### RecognizeImage
+
+| 参数 | 类型 | 必填 | 默认值 | 含义 |
+|---|---|---|---|---|
+| `model` | string | yes | — | 具有图像输入和文本输出的精确模型标识符 |
+| `provider` | string | no | 无 | 已注册提供商的精确名称；仅当模型标识符唯一时才可省略 |
+| `prompt` | string | yes | — | 识别任务；按附加顺序用 `image 1`、`image 2`、… 引用图片；回答语言跟随任务语言 |
+| `images` | array | yes | — | 一张或多张图片；顺序决定 `image N` 标签 |
+
+每个元素：`source`（媒体来源，见下表）、可选的 `media_type`（`url` / file-id / `s3_uri` / `gcs_uri` 来源必填；本地文件或内联载荷会自动确定）、可选的 `detail`（`low` / `high` / `auto`）。
+
+本地图片会在共享的视觉策略下进行完整验证和归一化：最长边限制在 2000 像素以内，过度拉长的图片会以原生分辨率切成小块（每块标记为 `Image N (part M of K)`）。URL 图片原样传递给提供商。
+
+### RecognizeAudio
+
+| 参数 | 类型 | 必填 | 默认值 | 含义 |
+|---|---|---|---|---|
+| `model` | string | yes | — | 具有音频输入和文本输出的精确模型标识符 |
+| `provider` | string | no | 无 | 已注册提供商的精确名称 |
+| `prompt` | string | yes | — | 识别任务；用 `audio 1`、`audio 2`、… 引用片段 |
+| `audio` | array | yes | — | 一个或多个音频片段 |
+
+每个元素：`source`、可选的 `media_type`（`base64` / `url` / file-id 来源必填）。本地文件的格式由扩展名推断（mp3/wav/flac/ogg/aac/aiff/opus/m4a），片段以内联方式发送。
+
+### 识别行为
+
+- 模型解析：需要具有所需输入模态（图像或音频）和文本输出的聊天类模型。不合适的模型会报错并给出合适模型的列表；未知标识符仅在显式指定 `provider` 时原样传递。通过 `Agent{list_models}` 发现候选模型。
+- 本地文件通过会话的虚拟文件视图读取：已暂存（尚未同步）的文件版本和暂存删除都会被遵守。
+- 结果是类型化的摘要：`answer`（模型的文本）、`usage`、`request_id`，失败时还有带 `code` 的 `error`（`abort`、`rate_limit`、`truncated`、`refusal`、`empty_response`、`incomplete_stream`、…）。任何失败时都会保留部分答案和 usage。
+- 识别 token 会计入会话使用量账本。
+
+示例——一次调用处理两张图片：
+
+```json
+{
+  "model": "glm-5.3-flash",
+  "prompt": "image 1 和 image 2 之间有什么变化？简要回答。",
+  "images": [
+    { "source": { "kind": "local_path", "path": "before.png" } },
+    { "source": { "kind": "local_path", "path": "after.png" } }
+  ]
+}
+```
+
+转录本地录音：
+
+```json
+{
+  "model": "gemini-3.6-flash",
+  "provider": "gemini",
+  "prompt": "这段录音里说了什么？简要回答。",
+  "audio": [
+    { "source": { "kind": "local_path", "path": "note.wav" } }
+  ]
+}
+```
+
 ## 行为与限制
 
 - 模型解析：给定 `provider` 时，未知名称返回错误并附带已注册提供商列表；在任何提供商处都找不到模型时返回错误并附带合适的模型列表；模型出现在多个提供商处时返回错误，要求指定 `provider`；模型种类错误时返回错误并附带该提供商合适的模型列表。

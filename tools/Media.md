@@ -73,6 +73,67 @@ Returns: `saved`, `usage`, `request_id` and, for music, `description`.
 
 For a music model (`AudioGeneration`) the parameters `voice`, `speed`, and `format` are forbidden — passing them gives an error. For a speech-synthesis model (`TextToSpeech`) the `voice` parameter is required and `duration_seconds` is forbidden.
 
+## Recognition tools
+
+Alongside generation, there are two one-off recognition tools: `RecognizeImage` and `RecognizeAudio`. Each makes a single LLM call with a minimal recognition prompt, no tools, and minimal context: pass one or several images (or audio clips) plus a task, and get a direct answer. Use them when the agent needs to describe a picture, read text from it, compare pictures, or transcribe/analyze audio — without spending the main context. Operations that transform media (editing, converting, multi-step analysis with other tools) require a full subagent.
+
+### RecognizeImage
+
+| parameter | type | required | default | meaning |
+|---|---|---|---|---|
+| `model` | string | yes | — | the exact model id with image input and text output |
+| `provider` | string | no | absent | the exact name of a registered provider; omitted only when the model id is unique across providers |
+| `prompt` | string | yes | — | the recognition task; refer to images as `image 1`, `image 2`, … in attachment order; the answer language follows the task language |
+| `images` | array | yes | — | one or more images; the order defines the `image N` labels |
+
+Each element: `source` (a media source, see the table below), optional `media_type` (required for `url` / file-id / `s3_uri` / `gcs_uri` sources; a local file or an inline payload is determined automatically), optional `detail` (`low` / `high` / `auto`).
+
+Local images are fully validated and normalized under the shared vision policy: the longest side is bounded by 2000 pixels, an excessively elongated image is cut into tiles at native resolution (each tile is labeled `Image N (part M of K)`). URL images are passed to the provider as-is.
+
+### RecognizeAudio
+
+| parameter | type | required | default | meaning |
+|---|---|---|---|---|
+| `model` | string | yes | — | the exact model id with audio input and text output |
+| `provider` | string | no | absent | the exact name of a registered provider |
+| `prompt` | string | yes | — | the recognition task; refer to clips as `audio 1`, `audio 2`, … |
+| `audio` | array | yes | — | one or more audio clips |
+
+Each element: `source`, optional `media_type` (required for `base64` / `url` / file-id sources). A local file's format is inferred from its extension (mp3/wav/flac/ogg/aac/aiff/opus/m4a) and the clip is sent inline.
+
+### Recognition behavior
+
+- Model resolution: the model must be a chat-kind model with the required input modality (image or audio) and text output. An unsuitable model gives an error with the list of suitable ones; an unknown id is passed verbatim only under an explicit `provider`. Discover candidates through `Agent{list_models}`.
+- A local file is read through the session's virtual file view: a staged (not yet synced) file version and staged deletions are honored.
+- The result is a typed summary: `answer` (the model's text), `usage`, `request_id`, and on failure an `error` with a `code` (`abort`, `rate_limit`, `truncated`, `refusal`, `empty_response`, `incomplete_stream`, …). A partial answer and usage are preserved on any failure.
+- Recognition tokens are folded into the session usage ledger.
+
+Example — two pictures, one call:
+
+```json
+{
+  "model": "glm-5.3-flash",
+  "prompt": "What changed between image 1 and image 2? Answer briefly.",
+  "images": [
+    { "source": { "kind": "local_path", "path": "before.png" } },
+    { "source": { "kind": "local_path", "path": "after.png" } }
+  ]
+}
+```
+
+Transcribing a local recording:
+
+```json
+{
+  "model": "gemini-3.6-flash",
+  "provider": "gemini",
+  "prompt": "Что сказано в этой записи? Кратко.",
+  "audio": [
+    { "source": { "kind": "local_path", "path": "note.wav" } }
+  ]
+}
+```
+
 ## Behavior and limits
 
 - Model resolution: with a given `provider`, an unknown name gives an error with the list of registered providers; a model not found at any provider gives an error with the list of suitable models; a model occurring at several providers gives an error requiring `provider` to be specified; a model of the wrong kind gives an error with the list of suitable models of that provider.
