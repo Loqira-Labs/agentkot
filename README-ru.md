@@ -63,6 +63,20 @@
 
 KOT на дешёвой быстрой модели обходит Hermes на той же модели — на 2.9 пункта по полному набору из 106 задач.
 
+### FrontierHarness Eval
+
+[FrontierHarness Eval](https://github.com/k-kolomeitsev/frontier-harness-eval) сравнивает 10 агентских harness-ов в 13 конфигурациях на одной модели Kimi K3 и 30 задачах программной инженерии с детерминированными верификаторами: 21 задача Terminal-Bench и 9 задач DeepSWE.
+
+<div align="center">
+  <a href="https://github.com/k-kolomeitsev/frontier-harness-eval">
+    <img src="assets/frontier-harness-eval.svg" width="100%" alt="FrontierHarness Eval: доля решённых задач и медианная стоимость задачи" />
+  </a>
+</div>
+
+KOT решил **23 из 30 задач (76.7%)** — лучший результат в бенчмарке. Показатель `Median cost per pass` — **$2.83**, медианное покрытие кешем — **94.1%**, медианное время задачи — **5 мин 0 с**.
+
+PR с результатами KOT отправлен в основной репозиторий бенчмарка. До его слияния ссылка на бенчмарк ведёт на наш форк.
+
 ### Terminal-Bench 3.0
 
 **Terminal-Bench 3.0** ([frontierbench.ai](https://www.frontierbench.ai/)) — настоящая терминальная работа: сборка, отладка, эксплуатация. Полный однопроходный прогон (k=1) по всему набору — 66 задач закреплённого датасета плюс 6 из предыдущей ревизии реестра, 72 trials, каждую задачу судит собственный верификатор. KOT работал на [DeepSeek V4 Flash](https://api-docs.deepseek.com/) с reasoning effort `high`. Полный ран: [72 trials на Harbor Hub](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791).

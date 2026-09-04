@@ -63,6 +63,20 @@
 
 在同一模型上，KOT 以廉价快速模型超越 Hermes —— 在全部 106 个任务上领先 2.9 个百分点。
 
+### FrontierHarness Eval
+
+[FrontierHarness Eval](https://github.com/k-kolomeitsev/frontier-harness-eval) 使用同一个 Kimi K3 模型，在 30 个由确定性验证器评分的软件工程任务上比较 10 个智能体 harness 的 13 种配置：其中包括 21 个 Terminal-Bench 任务和 9 个 DeepSWE 任务。
+
+<div align="center">
+  <a href="https://github.com/k-kolomeitsev/frontier-harness-eval">
+    <img src="assets/frontier-harness-eval.svg" width="100%" alt="FrontierHarness Eval：通过率与任务中位成本" />
+  </a>
+</div>
+
+KOT 完成了 **30 个任务中的 23 个（76.7%）**，取得基准测试中的最高通过率。`Median cost per pass` 为 **$2.83**，单任务缓存覆盖率中位数为 **94.1%**，任务耗时中位数为 **5 分 0 秒**。
+
+包含 KOT 结果的 PR 已提交至上游基准仓库。在合并之前，基准测试链接暂时指向我们的 fork。
+
 ### Terminal-Bench 3.0
 
 **Terminal-Bench 3.0**（[frontierbench.ai](https://www.frontierbench.ai/)）——真正的终端工作：构建、调试、运维。对整个任务套件的完整单次运行（k=1）——固定数据集的 66 个任务加上先前注册表修订中的 6 个，共 72 个 trials，每个任务由其专属验证器评分。KOT 驱动 [DeepSeek V4 Flash](https://api-docs.deepseek.com/)，推理强度为 `high`。完整运行记录：[Harbor Hub 上的 72 个 trials](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791)。

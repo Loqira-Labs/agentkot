@@ -63,6 +63,20 @@ Same model, DeepSeek V4 Flash — the harness decides:
 
 KOT on a cheap fast model outperforms Hermes on the same model — by 2.9 points on the full 106-task suite.
 
+### FrontierHarness Eval
+
+[FrontierHarness Eval](https://github.com/k-kolomeitsev/frontier-harness-eval) compares 10 agent harnesses across 13 configurations on the same Kimi K3 model and 30 verifier-scored software-engineering tasks: 21 Terminal-Bench tasks and 9 DeepSWE tasks.
+
+<div align="center">
+  <a href="https://github.com/k-kolomeitsev/frontier-harness-eval">
+    <img src="assets/frontier-harness-eval.svg" width="100%" alt="FrontierHarness Eval: pass rate versus median cost per task" />
+  </a>
+</div>
+
+KOT solved **23 of 30 tasks (76.7%)**, the highest pass rate in the benchmark. Median cost per pass was **$2.83**, median cache coverage was **94.1%**, and median task time was **5m 0s**.
+
+A pull request adding the KOT results has been submitted to the upstream benchmark repository. Until it is merged, the benchmark link points to our fork.
+
 ### Terminal-Bench 3.0
 
 **Terminal-Bench 3.0** ([frontierbench.ai](https://www.frontierbench.ai/)) — real terminal work: build, debug, operate. A full single-pass run (k=1) over the whole task suite — 66 tasks of the pinned dataset plus 6 from the previous registry revision, 72 trials, every task graded by its own verifier. KOT drove [DeepSeek V4 Flash](https://api-docs.deepseek.com/) at reasoning effort `high`. Full run: [72 trials on Harbor Hub](https://hub.harborframework.com/jobs/8f27a07f-4a88-41ce-b06c-6a713961c791).
