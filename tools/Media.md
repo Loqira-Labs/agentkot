@@ -177,7 +177,7 @@ Create two images inline, without saving to disk:
 ```json
 {
   "operation": "generate_image",
-  "model": "gpt-image-2",
+  "model": "gpt-image-2.5-flare",
   "prompt": "logo sketch",
   "n": 2
 }

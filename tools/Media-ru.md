@@ -177,7 +177,7 @@
 ```json
 {
   "operation": "generate_image",
-  "model": "gpt-image-2",
+  "model": "gpt-image-2.5-flare",
   "prompt": "эскиз логотипа",
   "n": 2
 }
