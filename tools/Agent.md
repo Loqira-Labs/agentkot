@@ -133,7 +133,7 @@ agent = "general-purpose" # default general-purpose
 name = "build"
 prompt = "implement per the specification"
 agent = "general-purpose"
-model = "claude-opus-5"   # alias or canonical id
+model = "claude-opus-5-5"   # alias or canonical id
 provider = "anthropic"    # cross-provider for an agent step/team members
 depends_on = ["spec"]     # DAG dependencies by step names
 inputs = ["spec"]         # subset of depends_on
@@ -261,7 +261,7 @@ The `to` recipient is an owned agent (an explicit name or an unnamed delegate's 
 
 ### Provider/model/reasoning-effort inheritance and override
 
-- `model`: with no value, the parent's model is inherited. Aliases `sonnet`→`claude-sonnet-5`, `opus`→`claude-opus-5`, `haiku`→`claude-haiku-4-5-20251001` (case-insensitive); any other non-empty id is passed through as-is, without silent substitution. When the child's provider publishes a model catalog, an id outside that catalog and a model that is not chat-eligible are rejected before the child starts; a provider without a catalog receives the id as-is.
+- `model`: with no value, the parent's model is inherited. Aliases `sonnet`→`claude-sonnet-5`, `opus`→`claude-opus-5-5`, `haiku`→`claude-haiku-4-5-20251001` (case-insensitive); any other non-empty id is passed through as-is, without silent substitution. When the child's provider publishes a model catalog, an id outside that catalog and a model that is not chat-eligible are rejected before the child starts; a provider without a catalog receives the id as-is.
 - `provider`: with no value, the parent's provider is inherited. On override, the entire child launch runs on this provider; an unregistered name is an error. With a `provider` set, the passed `model` or that provider's default is used; the parent's model does not leak across providers.
 - `effort`: an explicit value wins over inheritance; cross-provider children do not inherit the parent's level; `off` disables reasoning where the provider supports it.
 
@@ -339,7 +339,7 @@ Messaging a teammate and stopping it:
 Switching a teammate's model and inspecting agents:
 
 ```json
-{"operation": "set_model", "name": "reviewer", "provider": "anthropic", "model": "claude-opus-5"}
+{"operation": "set_model", "name": "reviewer", "provider": "anthropic", "model": "claude-opus-5-5"}
 ```
 
 ```json
