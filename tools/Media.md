@@ -112,7 +112,7 @@ Example — two pictures, one call:
 
 ```json
 {
-  "model": "glm-5.3-flash",
+  "model": "<vision-model-id>",
   "prompt": "What changed between image 1 and image 2? Answer briefly.",
   "images": [
     { "source": { "kind": "local_path", "path": "before.png" } },
@@ -125,7 +125,7 @@ Transcribing a local recording:
 
 ```json
 {
-  "model": "gemini-3.6-flash",
+  "model": "<audio-input-model-id>",
   "provider": "gemini",
   "prompt": "Что сказано в этой записи? Кратко.",
   "audio": [
@@ -165,7 +165,7 @@ Create one image and save it to a file:
 ```json
 {
   "operation": "generate_image",
-  "model": "gemini-3.1-flash-image",
+  "model": "<image-model-id>",
   "prompt": "still life in warm light",
   "save_to": "art.png",
   "size": "1024x1024"
@@ -177,7 +177,7 @@ Create two images inline, without saving to disk:
 ```json
 {
   "operation": "generate_image",
-  "model": "gpt-image-2.5-flare",
+  "model": "<image-model-id>",
   "prompt": "logo sketch",
   "n": 2
 }
@@ -188,7 +188,7 @@ Create a video from text:
 ```json
 {
   "operation": "generate_video",
-  "model": "veo-3.1-generate-preview",
+  "model": "<video-model-id>",
   "prompt": "the camera slowly orbits a mountain ridge at dawn",
   "save_to": "clip.mp4",
   "duration_seconds": 5
@@ -200,7 +200,7 @@ Edit an existing video:
 ```json
 {
   "operation": "generate_video",
-  "model": "sora-2",
+  "model": "<video-edit-model-id>",
   "prompt": "replace the background with a night city",
   "save_to": "edited.mp4",
   "task": "edit",
@@ -213,7 +213,7 @@ Create music and synthesize speech:
 ```json
 {
   "operation": "generate_audio",
-  "model": "lyria-3-clip-preview",
+  "model": "<music-model-id>",
   "prompt": "a calm ambient theme",
   "save_to": "track.wav",
   "duration_seconds": 30
@@ -223,9 +223,9 @@ Create music and synthesize speech:
 ```json
 {
   "operation": "generate_audio",
-  "model": "gpt-4o-mini-tts",
+  "model": "<tts-model-id>",
   "prompt": "Hello, this is a speech-synthesis check.",
   "save_to": "speech.wav",
-  "voice": "alloy"
+  "voice": "<voice-id>"
 }
 ```

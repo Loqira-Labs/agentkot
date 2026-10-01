@@ -112,7 +112,7 @@
 
 ```json
 {
-  "model": "glm-5.3-flash",
+  "model": "<vision-model-id>",
   "prompt": "Что изменилось между image 1 и image 2? Кратко.",
   "images": [
     { "source": { "kind": "local_path", "path": "before.png" } },
@@ -125,7 +125,7 @@
 
 ```json
 {
-  "model": "gemini-3.6-flash",
+  "model": "<audio-input-model-id>",
   "provider": "gemini",
   "prompt": "Что сказано в этой записи? Кратко.",
   "audio": [
@@ -165,7 +165,7 @@
 ```json
 {
   "operation": "generate_image",
-  "model": "gemini-3.1-flash-image",
+  "model": "<image-model-id>",
   "prompt": "натюрморт в тёплом свете",
   "save_to": "art.png",
   "size": "1024x1024"
@@ -177,7 +177,7 @@
 ```json
 {
   "operation": "generate_image",
-  "model": "gpt-image-2.5-flare",
+  "model": "<image-model-id>",
   "prompt": "эскиз логотипа",
   "n": 2
 }
@@ -188,7 +188,7 @@
 ```json
 {
   "operation": "generate_video",
-  "model": "veo-3.1-generate-preview",
+  "model": "<video-model-id>",
   "prompt": "камера медленно облетает горный хребет на рассвете",
   "save_to": "clip.mp4",
   "duration_seconds": 5
@@ -200,7 +200,7 @@
 ```json
 {
   "operation": "generate_video",
-  "model": "sora-2",
+  "model": "<video-edit-model-id>",
   "prompt": "заменить фон на ночной город",
   "save_to": "edited.mp4",
   "task": "edit",
@@ -213,7 +213,7 @@
 ```json
 {
   "operation": "generate_audio",
-  "model": "lyria-3-clip-preview",
+  "model": "<music-model-id>",
   "prompt": "спокойная эмбиент-тема",
   "save_to": "track.wav",
   "duration_seconds": 30
@@ -223,9 +223,9 @@
 ```json
 {
   "operation": "generate_audio",
-  "model": "gpt-4o-mini-tts",
+  "model": "<tts-model-id>",
   "prompt": "Здравствуйте, это проверка синтеза речи.",
   "save_to": "speech.wav",
-  "voice": "alloy"
+  "voice": "<voice-id>"
 }
 ```

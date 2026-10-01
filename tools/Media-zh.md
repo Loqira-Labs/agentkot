@@ -112,7 +112,7 @@
 
 ```json
 {
-  "model": "glm-5.3-flash",
+  "model": "<vision-model-id>",
   "prompt": "image 1 和 image 2 之间有什么变化？简要回答。",
   "images": [
     { "source": { "kind": "local_path", "path": "before.png" } },
@@ -125,7 +125,7 @@
 
 ```json
 {
-  "model": "gemini-3.6-flash",
+  "model": "<audio-input-model-id>",
   "provider": "gemini",
   "prompt": "这段录音里说了什么？简要回答。",
   "audio": [
@@ -165,7 +165,7 @@
 ```json
 {
   "operation": "generate_image",
-  "model": "gemini-3.1-flash-image",
+  "model": "<image-model-id>",
   "prompt": "暖光下的静物",
   "save_to": "art.png",
   "size": "1024x1024"
@@ -177,7 +177,7 @@
 ```json
 {
   "operation": "generate_image",
-  "model": "gpt-image-2.5-flare",
+  "model": "<image-model-id>",
   "prompt": "标志草图",
   "n": 2
 }
@@ -188,7 +188,7 @@
 ```json
 {
   "operation": "generate_video",
-  "model": "veo-3.1-generate-preview",
+  "model": "<video-model-id>",
   "prompt": "镜头在黎明时分缓慢环绕山脊",
   "save_to": "clip.mp4",
   "duration_seconds": 5
@@ -200,7 +200,7 @@
 ```json
 {
   "operation": "generate_video",
-  "model": "sora-2",
+  "model": "<video-edit-model-id>",
   "prompt": "将背景替换为夜晚的城市",
   "save_to": "edited.mp4",
   "task": "edit",
@@ -213,7 +213,7 @@
 ```json
 {
   "operation": "generate_audio",
-  "model": "lyria-3-clip-preview",
+  "model": "<music-model-id>",
   "prompt": "平静的氛围主题",
   "save_to": "track.wav",
   "duration_seconds": 30
@@ -223,9 +223,9 @@
 ```json
 {
   "operation": "generate_audio",
-  "model": "gpt-4o-mini-tts",
+  "model": "<tts-model-id>",
   "prompt": "你好，这是一次语音合成检查。",
   "save_to": "speech.wav",
-  "voice": "alloy"
+  "voice": "<voice-id>"
 }
 ```

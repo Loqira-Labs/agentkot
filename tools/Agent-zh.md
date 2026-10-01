@@ -133,7 +133,7 @@ agent = "general-purpose" # default general-purpose
 name = "build"
 prompt = "implement per the specification"
 agent = "general-purpose"
-model = "claude-opus-5-5"   # alias or canonical id
+model = "opus"              # alias or canonical id
 provider = "anthropic"    # cross-provider for an agent step/team members
 depends_on = ["spec"]     # DAG dependencies by step names
 inputs = ["spec"]         # subset of depends_on
@@ -261,7 +261,7 @@ depends_on = ["approve"]
 
 ### Provider/model/reasoning-effort inheritance and override
 
-- `model`：无值时，继承父会话的模型。别名 `sonnet`→`claude-sonnet-5`、`opus`→`claude-opus-5-5`、`haiku`→`claude-haiku-4-5-20251001`（不区分大小写）；任何其他非空 id 原样传递，不做静默替换。当子代理的提供方发布模型目录时，目录之外的 id 和不具备聊天资格的模型会在子代理启动前被拒绝；没有目录的提供方原样接收该 id。
+- `model`：无值时，继承父会话的模型。别名 `sonnet`、`opus`、`haiku`（不区分大小写）解析为对应 Anthropic 层级的当前规范 id（`claude-<tier>-<version>`）；任何其他非空 id 原样传递，不做静默替换。当子代理的提供方发布模型目录时，目录之外的 id 和不具备聊天资格的模型会在子代理启动前被拒绝；没有目录的提供方原样接收该 id。
 - `provider`：无值时，继承父会话的提供方。覆盖时，整个子代理启动都运行在该提供方上；未注册名称是错误。设置了 `provider` 时，使用传入的 `model` 或该提供方的默认模型；父会话的模型不会跨提供方泄漏。
 - `effort`：显式值优先于继承；跨提供方的子代理不继承父会话的级别；`off` 在提供方支持时禁用推理。
 
@@ -339,7 +339,7 @@ depends_on = ["approve"]
 切换队友的模型并检查代理：
 
 ```json
-{"operation": "set_model", "name": "reviewer", "provider": "anthropic", "model": "claude-opus-5-5"}
+{"operation": "set_model", "name": "reviewer", "provider": "anthropic", "model": "claude-<model>-<version>"}
 ```
 
 ```json
