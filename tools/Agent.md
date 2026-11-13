@@ -189,7 +189,7 @@ Parameters:
 | operation | string | yes | — | `"list_models"` |
 | provider | string | no | all providers | filter by a registered provider name |
 
-Returns `models_listed`: `provider`, `providers` (per provider: `name`, `is_default`, `spawnable`, `models`), `reason`/`known_providers` (on a soft miss from an unknown filter). The model card: `id`, `display_name`, `kind`, `for_chat`, `context_window`, `max_output_tokens`, `family`, `input_modalities`, `output_modalities`, `reasoning`, `tools`, `streaming`, `structured_outputs`, `preview`, `notes`.
+Returns `models_listed`: `provider`, `providers` (per provider: `name`, `is_default`, `spawnable`, `models`), `reason`/`known_providers` (on a soft miss from an unknown filter). The model card: `id`, `display_name`, `kind`, `for_chat`, `context_window`, `max_output_tokens`, `family`, `input_modalities`, `output_modalities`, `reasoning`, `tools`, `streaming`, `structured_outputs`, `preview`, `video` (declared tasks/options), `image` (declared options), `notes`.
 
 Only a model with `for_chat: true` can drive an agent session; a card with `for_chat: false` is a media/embedding row, generated through the Media tool.
 

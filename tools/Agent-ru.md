@@ -189,7 +189,7 @@ depends_on = ["approve"]
 | operation | string | да | — | `"list_models"` |
 | provider | string | нет | все провайдеры | фильтр по зарегистрированному имени провайдера |
 
-Возвращает `models_listed`: `provider`, `providers` (по провайдеру: `name`, `is_default`, `spawnable`, `models`), `reason`/`known_providers` (при мягком промахе по неизвестному фильтру). Карточка модели: `id`, `display_name`, `kind`, `for_chat`, `context_window`, `max_output_tokens`, `family`, `input_modalities`, `output_modalities`, `reasoning`, `tools`, `streaming`, `structured_outputs`, `preview`, `notes`.
+Возвращает `models_listed`: `provider`, `providers` (по провайдеру: `name`, `is_default`, `spawnable`, `models`), `reason`/`known_providers` (при мягком промахе по неизвестному фильтру). Карточка модели: `id`, `display_name`, `kind`, `for_chat`, `context_window`, `max_output_tokens`, `family`, `input_modalities`, `output_modalities`, `reasoning`, `tools`, `streaming`, `structured_outputs`, `preview`, `video` (объявленные задачи/опции), `image` (объявленные опции), `notes`.
 
 Только модель с `for_chat: true` может вести агентскую сессию; карточка с `for_chat: false` — это медиа/эмбеддинг-строка, генерируемая через инструмент Media.
 

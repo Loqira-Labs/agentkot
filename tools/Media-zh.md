@@ -20,42 +20,52 @@
 
 ### generate_image
 
-创建图像。
+生成图像；参考图驱动的生成和编辑使用同一操作。
 
 | 参数 | 类型 | 必填 | 默认值 | 含义 |
 |---|---|---|---|---|
-| `n` | integer | no | `1` | 图像数量，最小为 1 |
-| `size` | string | no | `"1024x1024"` | 请求的尺寸 |
-| `format` | string | no | `"png"` | 格式：仅 `png` 或 `jpeg` |
-| `quality` | string | no | 无 | 中性的质量提示 |
-| `style` | string | no | 无 | 中性的风格提示 |
+| `n` | integer | no | 支持或未声明时为1 | 正数数量提示 |
+| `size` | string | no | 支持或未声明时为1024x1024 | 尺寸提示 |
+| `format` | string | no | 支持或未声明时为png | png或jpeg |
+| `quality` | string | no | 无 | 质量提示 |
+| `style` | string | no | 无 | 风格提示 |
 | `negative_prompt` | string | no | 无 | 要避免的内容 |
-| `seed` | integer | no | 无 | 用于确定性结果的提示，最小为 0 |
+| `seed` | integer | no | 无 | 确定性种子提示 |
+| `background` | string | no | 无 | transparent、opaque或auto |
+| `images` | array | no | 空 | 原始输入引用；每项包含source和必填media_type |
+| `mask` | object | no | 无 | 原始蒙版引用；至少需要一张输入图像 |
 
-返回：`saved`（每个文件——`path`、`bytes`、`mime`）、`usage`、`request_id`、`revised_prompt`。没有 `save_to` 时，图像以内联 base64 块的形式在上下文中返回。
+`Agent{list_models}` 发布 `image.options`。声明不支持的提示不会发送，仅显式提供的提示列入 `ignored`；不支持的images/mask在生成前返回类型化unsupported。没有声明时由适配器判断。原图不进行vision归一化；LocalPath从cwd解析，URL下载不携带提供商凭证，声明的MIME须匹配实际字节。
+
+订阅图像id同时由openai和openai-codex发布：有歧义时必须指定provider。两个名称连接同一Codex Images后端。声明支持background和images；订阅服务器决定单张PNG及其他参数。Direct OpenAI图像行需要API密钥。
+
+返回saved（path、bytes、mime）、usage、request_id、revised_prompt及非空ignored。未提供save_to时返回内联图像块。
 
 ### generate_video
 
-创建和编辑视频。
+生成、编辑和延长视频。
 
 | 参数 | 类型 | 必填 | 默认值 | 含义 |
 |---|---|---|---|---|
-| `save_to` | string | yes | — | 输出文件或目录的路径 |
-| `task` | string | no | `"auto"` | 要做什么：`auto`、`text_to_video`、`image_to_video`、`reference_to_video`、`edit` |
-| `images` | array | no | 空 | 输入图像；一张图像驱动图像转视频，多张图像作为风格/主体参考 |
-| `input_video` | object | no | 无 | 被编辑的视频 |
-| `continuation_id` | string | no | 无 | 继续编辑先前有状态的结果 |
-| `stateful` | boolean | no | `false` | 将新结果保存到服务端以便继续 |
-| `duration_seconds` | number | no | `5.0` | 时长提示；有限且为正数 |
+| `save_to` | string | yes | — | 输出文件或目录 |
+| `task` | string | no | `"auto"` | `auto`、`text_to_video`、`image_to_video`、`reference_to_video`、`edit`、`extend` |
+| `images` | array | no | 空 | 1–2 张图像转视频帧（首帧+末帧），或风格/主体参考 |
+| `input_video` | object | no | 无 | 用于编辑或延长的原视频 |
+| `continuation_id` | string | no | 无 | 继续先前的有状态结果 |
+| `stateful` | boolean | no | `false` | 将新结果保存在服务端 |
+| `duration_seconds` | number | no | 支持或未声明时为 `5.0` | 有限且为正的时长提示 |
 | `aspect_ratio` | string | no | 无 | 宽高比提示 |
+| `resolution` | string | no | 无 | 分辨率提示；声明支持时原样传递 |
 | `fps` | integer | no | 无 | 每秒帧数提示，最小为 1 |
-| `seed` | integer | no | 无 | 用于确定性结果的提示 |
+| `seed` | integer | no | 无 | 确定性种子提示 |
 
-每个 `images` 元素和 `input_video` 字段都描述一个来源：`source`（带 kind 标签的对象）和必填的 `media_type`（声明的类型）。
+每张图像和输入视频都需要 `source`（带类型标签的来源对象）和 `media_type`。
 
-返回：`saved`（保存的视频），对于有状态的结果还有用于继续的 `continuation_id`。
+`Agent{list_models}` 发布模型声明的 `video.tasks` 和 `video.options`。声明不支持的提示不会发送，其名称列在 `ignored` 中；不支持的任务或 `continuation_id` 在生成前返回类型化 `unsupported`。没有视频声明时，由适配器判断支持情况。未设置且不支持的 `duration` 不发送；不支持的 `stateful` 仅在值为 `true` 时列入 `ignored`。
 
-任务形态限制（在调用提供商之前检查）：`text_to_video` 不接受图像、视频或 continuation；`image_to_video` 要求恰好一张图像，且不接受视频或 continuation；`reference_to_video` 要求至少一张图像，且不接受视频或 continuation；`edit` 不接受图像，且要求 `input_video` 或 `continuation_id` 中恰好一个；`auto` 最多接受一个输入类别（图像、视频或 continuation）。
+返回 `saved`、可选的 `continuation_id`，以及过滤了提示时的非空 `ignored`。
+
+任务形态：`text_to_video` 不接受媒体输入；`image_to_video` 接受 1–2 张图像，不接受视频或 continuation；`reference_to_video` 至少需要一张图像，不接受视频或 continuation。`edit` 要求原视频和 continuation 二选一；`extend` 需要原视频且不允许 continuation。编辑和延长可附带参考图像。`auto` 不允许同时传入视频和 continuation，原样交给适配器；已声明支持时，必须至少有一个与输入兼容的任务。
 
 ### generate_audio
 
@@ -154,7 +164,7 @@
 - `save_to` 相对于会话工作目录解析。目录（或无扩展名的路径）会获得形如 `image-1.png`、`video-1.mp4`、`audio-1.wav` 的生成名称；多张图像且显式指定名称基时，会添加索引：`art-1.png`、`art-2.png`。
 - 文件写入是原子的（带 fsync），父目录会自动创建。
 - 没有 `save_to` 时，图像以内联方式返回。内联图像预算为每次调用 8 个块；超出预算的图像会写入磁盘并以路径返回，绝不会被丢弃。内联图像以最长边不超过 2000 像素的原样传递；过度拉长的图像会在原生分辨率下切成小块，其余部分被压缩到边界以内。
-- 提供商不支持的字段返回 `unsupported` 错误——不会有任何内容被静默丢弃。`error.code` 中的提供商错误类别：`unsupported`、`unauthorized`、`rate_limit`、`overloaded`、`context_overflow`、`invalid_request`、`http`、`provider_error`、`agent_loop`。
+- 声明的图像/视频过滤之外的提供商限制会返回类型化错误。`error.code` 中的提供商错误类别：`unsupported`、`unauthorized`、`rate_limit`、`overloaded`、`context_overflow`、`invalid_request`、`http`、`provider_error`、`agent_loop`。
 - 中断请求会返回 `media generation interrupted` 错误；不会产生调用结果，而已成功写入磁盘的文件会保留。
 - 如果当前配置中未配置媒体提供商，调用会返回关于媒体生成不可用的错误。
 

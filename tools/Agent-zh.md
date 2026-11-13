@@ -189,7 +189,7 @@ depends_on = ["approve"]
 | operation | string | yes | — | `"list_models"` |
 | provider | string | no | all providers | 按注册的提供方名称过滤 |
 
-返回 `models_listed`：`provider`、`providers`（每个提供方：`name`、`is_default`、`spawnable`、`models`）、`reason`/`known_providers`（来自未知过滤器的软未命中时）。模型卡：`id`、`display_name`、`kind`、`for_chat`、`context_window`、`max_output_tokens`、`family`、`input_modalities`、`output_modalities`、`reasoning`、`tools`、`streaming`、`structured_outputs`、`preview`、`notes`。
+返回 `models_listed`：`provider`、`providers`（每个提供方：`name`、`is_default`、`spawnable`、`models`）、`reason`/`known_providers`（来自未知过滤器的软未命中时）。模型卡：`id`、`display_name`、`kind`、`for_chat`、`context_window`、`max_output_tokens`、`family`、`input_modalities`、`output_modalities`、`reasoning`、`tools`、`streaming`、`structured_outputs`、`preview`、`video`（声明的任务/选项）、`image`（声明的选项）、`notes`。
 
 只有 `for_chat: true` 的模型能驱动代理会话；`for_chat: false` 的卡是媒体/嵌入行，通过 Media 工具生成。
 
