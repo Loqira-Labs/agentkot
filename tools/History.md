@@ -80,7 +80,14 @@ Filters are combined with logical AND (time cutoff → text → limit). An inval
 
 ### compact
 
-Schedules context compaction: before the next response, folds the older prefix of the current session into a brief summary, keeping the most recent messages. Takes no parameters; always acts on the live session. The call always schedules the compaction and returns `scheduled: true`. The folding itself happens outside the tool, before the next request to the model. Use only when the context is genuinely full (around 90%).
+Schedules context compaction: before the next response, folds the older prefix of the current session into a brief summary, keeping the most recent messages. Always acts on the live session. The call always schedules the compaction and returns `scheduled: true`. The folding itself happens outside the tool, before the next request to the model. Use only when the context is genuinely full (around 90%).
+
+| parameter | type | required | default | meaning |
+|---|---|---|---|---|
+| provider | string | no | the session's provider | the registered provider whose model folds the history; on its own it selects that provider's default model |
+| model | string | no | the configured compaction model | the model that folds the history: the `sonnet`/`opus`/`haiku` alias or a model id of the chosen provider |
+
+Without `provider` and `model` the history is folded by the compaction model from `settings.json` (`compaction.provider` + `compaction.model`), otherwise by the session's own model. A named provider and model apply to this one compaction; the result additionally returns the resolved `provider` and `model`. An unregistered provider, a provider without a default model, an empty value, or a model that is not a chat model, accepts no text, or does not support tools is an error, and nothing is scheduled.
 
 ## Behavior and limitations
 
@@ -131,4 +138,10 @@ Compact the current session's context:
 
 ```json
 {"operation": "compact"}
+```
+
+Compact the context with a model of another provider:
+
+```json
+{"operation": "compact", "provider": "<provider>", "model": "<model-id>"}
 ```
