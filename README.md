@@ -182,6 +182,8 @@ The model catalog is embedded in the binary: every model carries an identifier, 
 
 The reasoning effort is set when a session is created and switched on a live session: `off`, `low`, `medium`, `high`, `xhigh`, `max`.
 
+The model's own reasoning from earlier turns and tool calls goes back to its provider in the form that provider accepts. Switching the provider or model of a live session keeps the whole history: reasoning the new provider's API does not accept is left out of its requests and is sent again once the session returns to the provider that produced it.
+
 ## Web interface
 
 - The list of projects and sessions: create, resume, rewind to an earlier message, close and delete a session.
